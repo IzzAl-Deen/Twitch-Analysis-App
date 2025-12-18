@@ -14,6 +14,6 @@ object ScriptRunner {
     Process(Seq("cmd", "/c", scriptPath.getAbsolutePath)).run()
 
     println("Kafka start command issued.")
-    Thread.sleep(10000)
+    Thread.sleep(15000)
   }
 }
