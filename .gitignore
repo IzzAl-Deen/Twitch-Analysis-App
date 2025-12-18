@@ -62,3 +62,4 @@ build/
 /src/test/scala/TwitchChatStreaming.scala
 /src/test/scala/TwitchKafkaProducer.scala
 /src/test/scala/TwitchSparkProcessor.scala
+/src/main/scala/kafka-data/
