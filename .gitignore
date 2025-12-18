@@ -1,0 +1,64 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Scala ###
+.bsp/
+/src/test/scala/
+/src/test/scala/Structure/
+/src/test/scala/Structure/Config/
+/src/test/scala/Structure/Consumer/
+/src/test/scala/Structure/Kafkadata/
+/src/test/scala/Structure/Producer/
+/src/test/scala/Structure/Producer/Helpers/
+/src/test/scala/Structure/Producer/Connect.scala
+/src/test/scala/Structure/Producer/ProducerCollect.scala
+/src/test/scala/Structure/Script/
+/src/test/scala/Structure/Main.scala
+/src/test/scala/Test/
+/src/test/scala/dummy_chat.json
+/src/test/scala/Producer.scala
+/src/test/scala/TwitchChatStreaming.scala
+/src/test/scala/TwitchKafkaProducer.scala
+/src/test/scala/TwitchSparkProcessor.scala
