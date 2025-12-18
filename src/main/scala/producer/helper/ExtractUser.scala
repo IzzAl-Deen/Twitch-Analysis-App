@@ -1,7 +1,7 @@
 package producer.helper
 
 object ExtractUser {
-    def extractUser (line : String): Unit = {
+    def extractUser (line : String): String = {
         val name = "display-name=" //the display-name= is from the API
 
         if(line.contains(name)){

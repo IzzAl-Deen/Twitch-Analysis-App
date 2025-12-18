@@ -1,5 +1,7 @@
 package producer.helper
-
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 object ExtractTimestamp {
   val formatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
