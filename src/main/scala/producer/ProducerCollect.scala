@@ -8,33 +8,34 @@ import config.KafkaConfig
 import config.KafkaConfig.props
 import config.TwitchConfig
 
-object ProducerCollect extends App {
-  val producer = new KafkaProducer[String, String](props)
-  // Enable Twitch IRC tags (REQUIRED for timestamps)
-  TwitchIRC.out.println("CAP REQ :twitch.tv/tags")
-  val token = TwitchConfig.token
-  val nickname = TwitchConfig.nickname
-  val channel = TwitchConfig.channel
+object ProducerCollect {
+  def RunProducer() {
+    val producer = new KafkaProducer[String, String](props)
 
-  // Authenticate and join channel
-  TwitchIRC.out.println(s"PASS $token")
-  TwitchIRC.out.println(s"NICK $nickname")
-  TwitchIRC.out.println(s"JOIN $channel")
+    TwitchIRC.out.println("CAP REQ :twitch.tv/tags")
+    val token = TwitchConfig.token
+    val nickname = TwitchConfig.nickname
+    val channel = TwitchConfig.channel
 
-  println(s"Connected to Twitch channel $channel as $nickname")
-  while (true) {
-    val line = TwitchIRC.in.readLine()
-    if (line != null) {
-      if (line.startsWith("PING")) {
-        TwitchIRC.out.println("PONG :tmi.twitch.tv")
-      } else if (line.contains("PRIVMSG")) {
+    // Authenticate and join channel
+    TwitchIRC.out.println(s"PASS $token")
+    TwitchIRC.out.println(s"NICK $nickname")
+    TwitchIRC.out.println(s"JOIN $channel")
 
-        val timestamp = ExtractTimestamp.extractTimestamp(line)
-        val user = ExtractUser.extractUser(line)
-        val message = ExtractMessage.extractMessage(line)
+    println(s"Connected to Twitch channel $channel as $nickname")
+    while (true) {
+      val line = TwitchIRC.in.readLine()
+      if (line != null) {
+        if (line.startsWith("PING")) {
+          TwitchIRC.out.println("PONG :tmi.twitch.tv")
+        } else if (line.contains("PRIVMSG")) {
 
-        val json =
-          s"""
+          val timestamp = ExtractTimestamp.extractTimestamp(line)
+          val user = ExtractUser.extractUser(line)
+          val message = ExtractMessage.extractMessage(line)
+
+          val json =
+            s"""
 					   |{
 					   |  "timestamp": "$timestamp",
 					   |  "user": "$user",
@@ -42,9 +43,10 @@ object ProducerCollect extends App {
 					   |}
 					 """.stripMargin
 
-        producer.send(new ProducerRecord[String, String](KafkaConfig.topic, json))
+          producer.send(new ProducerRecord[String, String](KafkaConfig.topic, json))
 
-        println(json)
+          println(json)
+        }
       }
     }
   }
