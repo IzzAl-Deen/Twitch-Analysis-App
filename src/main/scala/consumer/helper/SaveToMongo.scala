@@ -11,7 +11,6 @@ object SaveToMongo {
       .format("console")
       .option("truncate", false)
       .option("numRows", 15)
-      .queryName("WindowedUserActivity")
       .trigger(Trigger.ProcessingTime("15 seconds"))
       .start()
 
