@@ -1,9 +1,8 @@
 package consumer
 
 import config.KafkaConfig._
-
 import config.SparkConfig._
-import consumer.helper.TopUsers
+import consumer.helper.{PeriodTopUsers, SaveToMongo, TopUsers}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
@@ -41,6 +40,10 @@ object ConsumerCollect {
       .filter($"ts".isNotNull)
 
     val topUsers = TopUsers.Run(timestampDF)
+    val periodTopUsers = PeriodTopUsers.Run(timestampDF)
+
+    SaveToMongo.Save(topUsers, "complete")
+    SaveToMongo.Save(periodTopUsers, "complete")
 
 
 
