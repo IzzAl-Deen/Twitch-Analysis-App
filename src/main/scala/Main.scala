@@ -6,6 +6,4 @@ object Main extends App {
   ScriptRunner.startKafka()
   ProducerCollect.RunProducer()
 
-
-
 }

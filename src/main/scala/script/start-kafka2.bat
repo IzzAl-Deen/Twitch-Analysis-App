@@ -1,3 +1,4 @@
+
 @echo off
 
 
@@ -13,11 +14,8 @@ if not exist "%DATA_DIR%" (
 )
 
 
-start "Zookeeper" cmd /k ^
-"%KAFKA_HOME%\bin\windows\zookeeper-server-start.bat ^
-%KAFKA_HOME%\config\zookeeper.properties"
 
-
-timeout /t 5 > nul
-
-
+start "Kafka" cmd /k ^
+"%KAFKA_HOME%\bin\windows\kafka-server-start.bat ^
+%KAFKA_HOME%\config\server.properties ^
+--override log.dirs=%DATA_DIR%"
