@@ -15,6 +15,9 @@ libraryDependencies ++= Seq(
   "org.mongodb" % "mongo-java-driver" % "3.12.10",
   "org.apache.kafka"    %  "kafka-clients"         % "2.4.0",
   "org.apache.kafka"    %% "kafka"                 % "2.4.0",
-  "org.apache.kafka"    %  "kafka-streams"         % "2.4.0"
+  "org.apache.kafka"    %  "kafka-streams"         % "2.4.0",
+
+  "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.4.5"
+
 )
 
