@@ -1,7 +1,5 @@
 import consumer.ConsumerCollect
 
-object Main2 extends App {
-
+object ConsumerRunnable extends App {
   ConsumerCollect.RunConsumer()
-
 }
