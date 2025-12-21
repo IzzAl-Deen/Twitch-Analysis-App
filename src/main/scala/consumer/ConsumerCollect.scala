@@ -42,11 +42,16 @@ object ConsumerCollect {
       .withColumn("ts", to_timestamp($"timestamp", "yyyy-MM-dd HH:mm:ss"))
       .filter($"ts".isNotNull)
 
+
+    val funWordsPercentage = Seq("lol", "lmao", "hahaha", "lo", "XD")
+    val badWordsPercentage = Seq("joker", "****", "monkey")
+
     val topUsers = TopUsers.Run(timestampDF)
     val periodTopUsers = PeriodTopUsers.Run(timestampDF)
     val mostWords = MostFrequentWords.Run(timestampDF)
     val periodWords = PeriodMostFrequentWords.Run(timestampDF)
-    val funRate = FunPercentage.Run(timestampDF)
+    val funRate = FunPercentage.Run(timestampDF,funWordsPercentage)
+    val badRate = FunPercentage.Run(timestampDF,badWordsPercentage)
 
 
     OutputToConsole.Save(topUsers, "complete")
@@ -54,12 +59,14 @@ object ConsumerCollect {
     OutputToConsole.Save(mostWords,"complete")
     OutputToConsole.Save(periodWords,"complete")
     OutputToConsole.Save(funRate, "complete")
+    OutputToConsole.Save(badRate, "complete")
 
     SaveToMongo.Save(topUsers,"complete","top_users")
     SaveToMongo.Save(periodTopUsers, "complete", "period_top_users")
     SaveToMongo.Save(mostWords,"complete","most_words")
     SaveToMongo.Save(periodWords,"complete","period_most_words")
     SaveToMongo.Save(funRate,"complete", "fun_rates")
+    SaveToMongo.Save(badRate,"complete", "bad_rates")
 
     ProbabilisticMongo.Save(timestampDF,"probabilistic_top_users")
 
