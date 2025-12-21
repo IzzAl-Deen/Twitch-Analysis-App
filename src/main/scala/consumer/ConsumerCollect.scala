@@ -2,8 +2,8 @@ package consumer
 
 import config.KafkaConfig._
 import config.SparkConfig._
-import consumer.helper.{OutputToConsole, PeriodTopUsers, SaveToMongo, TopUsers}
-import consumer.probabilistic.{CountMinSketch, ProbabilisticConsole, ProbabilisticMongo}
+import consumer.helper.{MostFrequentWords, OutputToConsole, PeriodMostFrequentWords, PeriodTopUsers, SaveToMongo, TopUsers}
+import consumer.probabilistic.ProbabilisticMongo
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
@@ -23,7 +23,7 @@ object ConsumerCollect {
       .format("kafka")
       .option("kafka.bootstrap.servers", kafkaLocalHost)
       .option("subscribe", topic)
-      .option("startingOffsets", "earliest")
+      .option("startingOffsets", "latest")
       .option("failOnDataLoss", "false")
       .load()
 
@@ -44,15 +44,20 @@ object ConsumerCollect {
 
     val topUsers = TopUsers.Run(timestampDF)
     val periodTopUsers = PeriodTopUsers.Run(timestampDF)
+    val mostWords = MostFrequentWords.Run(timestampDF)
+    val periodWords = PeriodMostFrequentWords.Run(timestampDF)
 
     OutputToConsole.Save(topUsers, "complete")
     OutputToConsole.Save(periodTopUsers, "complete")
+    OutputToConsole.Save(mostWords,"complete")
+    OutputToConsole.Save(periodWords,"complete")
 
     SaveToMongo.Save(topUsers,"complete","top_users")
     SaveToMongo.Save(periodTopUsers, "complete", "period_top_users")
+    SaveToMongo.Save(mostWords,"complete","most_words")
+    SaveToMongo.Save(periodWords,"complete","period_most_words")
 
-    ProbabilisticConsole.Save(timestampDF)
-    ProbabilisticMongo.Save(timestampDF, "probabilistic_top_users")
+    ProbabilisticMongo.Save(timestampDF,"probabilistic_top_users")
 
 
     spark.streams.awaitAnyTermination()
