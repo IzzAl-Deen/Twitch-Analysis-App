@@ -2,9 +2,12 @@ package consumer
 
 import config.KafkaConfig._
 import config.SparkConfig._
-import consumer.helper.{PeriodTopUsers, SaveToMongo, TopUsers}
+import consumer.helper.{OutputToConsole, PeriodTopUsers, SaveToMongo, TopUsers}
+import consumer.probabilistic.{CountMinSketch, ProbabilisticConsole}
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
+
 
 object ConsumerCollect {
   def RunConsumer(): Unit = {
@@ -20,7 +23,7 @@ object ConsumerCollect {
       .format("kafka")
       .option("kafka.bootstrap.servers", kafkaLocalHost)
       .option("subscribe", topic)
-      .option("startingOffsets", "latest")
+      .option("startingOffsets", "earliest")
       .option("failOnDataLoss", "false")
       .load()
 
@@ -42,9 +45,13 @@ object ConsumerCollect {
     val topUsers = TopUsers.Run(timestampDF)
     val periodTopUsers = PeriodTopUsers.Run(timestampDF)
 
-    SaveToMongo.Save(topUsers, "complete")
-    SaveToMongo.Save(periodTopUsers, "complete")
+    OutputToConsole.Save(topUsers, "complete")
+    OutputToConsole.Save(periodTopUsers, "complete")
 
+    SaveToMongo.Save(topUsers,"complete","top_users")
+    SaveToMongo.Save(periodTopUsers, "complete", "period_top_users")
+
+    ProbabilisticConsole.Save(timestampDF)
 
 
     spark.streams.awaitAnyTermination()

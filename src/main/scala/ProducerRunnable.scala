@@ -2,6 +2,6 @@ import producer.ProducerCollect
 import script.ScriptRunner
 
 object ProducerRunnable extends App {
-  ScriptRunner.startKafka()
+//  ScriptRunner.startKafka()
   ProducerCollect.RunProducer()
 }

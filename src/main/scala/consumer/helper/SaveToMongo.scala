@@ -1,21 +1,28 @@
 package consumer.helper
 
+import com.mongodb.client.model.Aggregates.count
+import config.MongoConfig._
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.streaming.Trigger
-import org.apache.spark.sql.streaming.StreamingQuery
+import org.apache.spark.sql.streaming.{StreamingQuery, Trigger}
+
 
 object SaveToMongo {
-  def Save(DF : DataFrame, formatType : String): StreamingQuery ={
-    val windowQuery = DF.writeStream
-      .outputMode(formatType)
-      .format("console")
-      .option("truncate", false)
-      .option("numRows", 15)
+  def Save(DF : DataFrame,output: String, collection : String): StreamingQuery = {
+
+    val query = DF.writeStream
+      .outputMode(output)
+      .foreachBatch { (batchDF: DataFrame, _: Long) =>
+        batchDF.write
+          .format("mongo")
+          .option("uri", uri)
+          .option("database", database)
+          .option("collection", collection)
+          .mode("overwrite")
+          .save()
+      }
       .trigger(Trigger.ProcessingTime("15 seconds"))
       .start()
 
-    windowQuery
-
+    query
   }
-
 }
