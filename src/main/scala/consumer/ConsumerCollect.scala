@@ -2,7 +2,7 @@ package consumer
 
 import config.KafkaConfig._
 import config.SparkConfig._
-import consumer.helper.{MostFrequentWords, OutputToConsole, PeriodMostFrequentWords, PeriodTopUsers, SaveToMongo, TopUsers}
+import consumer.helper.{FunPercentage, MostFrequentWords, OutputToConsole, PeriodMostFrequentWords, PeriodTopUsers, SaveToMongo, TopUsers}
 import consumer.probabilistic.ProbabilisticMongo
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
@@ -46,16 +46,20 @@ object ConsumerCollect {
     val periodTopUsers = PeriodTopUsers.Run(timestampDF)
     val mostWords = MostFrequentWords.Run(timestampDF)
     val periodWords = PeriodMostFrequentWords.Run(timestampDF)
+    val funRate = FunPercentage.Run(timestampDF)
+
 
     OutputToConsole.Save(topUsers, "complete")
     OutputToConsole.Save(periodTopUsers, "complete")
     OutputToConsole.Save(mostWords,"complete")
     OutputToConsole.Save(periodWords,"complete")
+    OutputToConsole.Save(funRate, "complete")
 
     SaveToMongo.Save(topUsers,"complete","top_users")
     SaveToMongo.Save(periodTopUsers, "complete", "period_top_users")
     SaveToMongo.Save(mostWords,"complete","most_words")
     SaveToMongo.Save(periodWords,"complete","period_most_words")
+    SaveToMongo.Save(funRate,"complete", "fun_rates")
 
     ProbabilisticMongo.Save(timestampDF,"probabilistic_top_users")
 
